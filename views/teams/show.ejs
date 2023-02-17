@@ -1,0 +1,64 @@
+<% layout('layouts/boilerplate') %> 
+    
+
+
+<div class="row">
+<div class="d-flex justify-content-center">
+<div class="card mb-3 " style="width: 18rem;">
+  <% for(let img of teams.images) { %>
+  <img class="card-img-top" src="<%=img.url %>" alt="Card image cap">
+    <% } %>
+  <div class="card-body">
+<h5 class="card-title"><%= teams.team %> </h5>
+    <p class="card-text"></p>
+ <p class="card-text">Submitted By <%=teams.author.username %></p>
+  </div>
+  <ul class="list-group list-group-flush">
+   <% for(let players of teamPlayers) { %> 
+        <% if( players.team ==  teams.team) { %> 
+        <li class="list-group-item"><a href="teams/<%=players.id%>"><%=players.name %> </a></li>
+        <% } %> 
+        <% } %> 
+  </ul>
+<% if(currentUser && teams.author.equals(currentUser._id)) { %>
+  <div class="card-body">
+    <a href="/teams/<%= teams._id%>/edit" class="card-link btn btn-info">Edit</a>
+                      <form class="d-inline" action="/teams/<%=teams._id%>?_method=DELETE" method="POST">
+                            <button class="btn btn-danger">Delete Team</button>
+                        </form>
+    <a href="/teams" class="card-link btn btn-primary">Back to all teams</a>
+  </div>
+
+<form action="/teams/<%=teams._id%>/players" method="post" class="mb-3 validated-form" novalidate>
+  <div class="mb-3">
+  <label class="form-label" for="player">Players</label>
+<input class="form-control" type="text" name="player[name]" id="body" required>
+<div class="valid-feedback">
+  Looks Good!
+</div>
+<button class="btn btn-success">Submit</button>
+</div>
+</form>
+
+<% } %>
+<% for(let player of teams.players) { %>
+  <div class="card">
+    <div class="card-body">
+<h5 class="card-title"><%=player.name %></h5>
+<% if(currentUser && teams.author.equals(currentUser._id)) { %>
+    <form action="/teams/<%=teams._id%>/players/<%=player._id%>?_method=DELETE" method="POST"> 
+        <button class="btn btn-sm btn-danger">delete player</button>
+      </form>
+<% } %>
+    </div>
+
+  </div>
+
+<% } %>
+</div>
+</div>
+</div>
+
+
+
+
